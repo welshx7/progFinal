@@ -32,7 +32,7 @@ namespace progFinal
         //
         int costScaling = 2;
         int luckScaling = 50;
-
+        //
         void updateShopLabels(int updateButtonCost = 0) {
 
             if (updateButtonCost == 1) {
