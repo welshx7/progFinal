@@ -29,7 +29,7 @@ namespace progFinal
         int luckAdderCost = 250;
         int extraSellMultiCost = 500;
         int oreMineAmountCost = 1000;
-
+        //
         int costScaling = 2;
         int luckScaling = 50;
 
