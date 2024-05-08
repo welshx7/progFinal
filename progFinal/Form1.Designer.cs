@@ -31,13 +31,22 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.loginGroupBox = new System.Windows.Forms.GroupBox();
+            this.badLoginDetailsLabel = new System.Windows.Forms.Label();
+            this.cancelLoginButton = new System.Windows.Forms.Button();
+            this.submitLoginButton = new System.Windows.Forms.Button();
+            this.usernameLoginTextbox = new System.Windows.Forms.TextBox();
+            this.passwordLoginTextbox = new System.Windows.Forms.TextBox();
+            this.passwordLoginLabel = new System.Windows.Forms.Label();
+            this.usernameLoginLabel = new System.Windows.Forms.Label();
             this.quitGameButton = new System.Windows.Forms.Button();
             this.createAccountButton = new System.Windows.Forms.Button();
             this.loginButton = new System.Windows.Forms.Button();
             this.gameTitleTextbox = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.backgroundPannel = new System.Windows.Forms.Panel();
+            this.gameTabNoLoginCover = new System.Windows.Forms.GroupBox();
+            this.saveGameButton = new System.Windows.Forms.Button();
             this.shopGB = new System.Windows.Forms.GroupBox();
             this.increaseSellMulti = new System.Windows.Forms.Button();
             this.mineMoreOresUpgradeButton = new System.Windows.Forms.Button();
@@ -60,6 +69,7 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.loginGroupBox.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.backgroundPannel.SuspendLayout();
             this.shopGB.SuspendLayout();
@@ -91,7 +101,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.loginGroupBox);
             this.panel1.Controls.Add(this.quitGameButton);
             this.panel1.Controls.Add(this.createAccountButton);
             this.panel1.Controls.Add(this.loginButton);
@@ -102,18 +112,98 @@
             this.panel1.Size = new System.Drawing.Size(815, 410);
             this.panel1.TabIndex = 0;
             // 
-            // label1
+            // loginGroupBox
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Yellow;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(85, 226);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(184, 48);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Doesn\'t work yet, \r\njust click login >>>\r\n";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.loginGroupBox.BackColor = System.Drawing.Color.Silver;
+            this.loginGroupBox.Controls.Add(this.badLoginDetailsLabel);
+            this.loginGroupBox.Controls.Add(this.cancelLoginButton);
+            this.loginGroupBox.Controls.Add(this.submitLoginButton);
+            this.loginGroupBox.Controls.Add(this.usernameLoginTextbox);
+            this.loginGroupBox.Controls.Add(this.passwordLoginTextbox);
+            this.loginGroupBox.Controls.Add(this.passwordLoginLabel);
+            this.loginGroupBox.Controls.Add(this.usernameLoginLabel);
+            this.loginGroupBox.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F);
+            this.loginGroupBox.ForeColor = System.Drawing.Color.Black;
+            this.loginGroupBox.Location = new System.Drawing.Point(240, 95);
+            this.loginGroupBox.Name = "loginGroupBox";
+            this.loginGroupBox.Size = new System.Drawing.Size(367, 191);
+            this.loginGroupBox.TabIndex = 4;
+            this.loginGroupBox.TabStop = false;
+            this.loginGroupBox.Text = "Login";
+            this.loginGroupBox.Visible = false;
+            // 
+            // badLoginDetailsLabel
+            // 
+            this.badLoginDetailsLabel.AutoSize = true;
+            this.badLoginDetailsLabel.Font = new System.Drawing.Font("Arial Rounded MT Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.badLoginDetailsLabel.ForeColor = System.Drawing.Color.Red;
+            this.badLoginDetailsLabel.Location = new System.Drawing.Point(82, 127);
+            this.badLoginDetailsLabel.Name = "badLoginDetailsLabel";
+            this.badLoginDetailsLabel.Size = new System.Drawing.Size(199, 12);
+            this.badLoginDetailsLabel.TabIndex = 6;
+            this.badLoginDetailsLabel.Text = "* Username Or Password Incorrect";
+            this.badLoginDetailsLabel.Visible = false;
+            // 
+            // cancelLoginButton
+            // 
+            this.cancelLoginButton.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cancelLoginButton.Location = new System.Drawing.Point(218, 147);
+            this.cancelLoginButton.Name = "cancelLoginButton";
+            this.cancelLoginButton.Size = new System.Drawing.Size(99, 23);
+            this.cancelLoginButton.TabIndex = 5;
+            this.cancelLoginButton.Text = "Cancel";
+            this.cancelLoginButton.UseVisualStyleBackColor = true;
+            this.cancelLoginButton.Click += new System.EventHandler(this.cancelLoginButton_Click);
+            // 
+            // submitLoginButton
+            // 
+            this.submitLoginButton.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.submitLoginButton.Location = new System.Drawing.Point(50, 147);
+            this.submitLoginButton.Name = "submitLoginButton";
+            this.submitLoginButton.Size = new System.Drawing.Size(99, 23);
+            this.submitLoginButton.TabIndex = 4;
+            this.submitLoginButton.Text = "Submit";
+            this.submitLoginButton.UseVisualStyleBackColor = true;
+            this.submitLoginButton.Click += new System.EventHandler(this.submitLoginButton_Click);
+            // 
+            // usernameLoginTextbox
+            // 
+            this.usernameLoginTextbox.Location = new System.Drawing.Point(153, 44);
+            this.usernameLoginTextbox.Name = "usernameLoginTextbox";
+            this.usernameLoginTextbox.Size = new System.Drawing.Size(194, 29);
+            this.usernameLoginTextbox.TabIndex = 3;
+            this.usernameLoginTextbox.TextChanged += new System.EventHandler(this.usernameLoginTextbox_TextChanged);
+            // 
+            // passwordLoginTextbox
+            // 
+            this.passwordLoginTextbox.Location = new System.Drawing.Point(153, 89);
+            this.passwordLoginTextbox.Name = "passwordLoginTextbox";
+            this.passwordLoginTextbox.PasswordChar = '*';
+            this.passwordLoginTextbox.Size = new System.Drawing.Size(194, 29);
+            this.passwordLoginTextbox.TabIndex = 2;
+            // 
+            // passwordLoginLabel
+            // 
+            this.passwordLoginLabel.BackColor = System.Drawing.Color.LightGray;
+            this.passwordLoginLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.passwordLoginLabel.Location = new System.Drawing.Point(22, 89);
+            this.passwordLoginLabel.Name = "passwordLoginLabel";
+            this.passwordLoginLabel.Size = new System.Drawing.Size(116, 29);
+            this.passwordLoginLabel.TabIndex = 1;
+            this.passwordLoginLabel.Text = "Password";
+            this.passwordLoginLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.passwordLoginLabel.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // usernameLoginLabel
+            // 
+            this.usernameLoginLabel.BackColor = System.Drawing.Color.LightGray;
+            this.usernameLoginLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.usernameLoginLabel.Location = new System.Drawing.Point(22, 44);
+            this.usernameLoginLabel.Name = "usernameLoginLabel";
+            this.usernameLoginLabel.Size = new System.Drawing.Size(116, 29);
+            this.usernameLoginLabel.TabIndex = 0;
+            this.usernameLoginLabel.Text = "Username";
+            this.usernameLoginLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // quitGameButton
             // 
@@ -176,6 +266,8 @@
             // backgroundPannel
             // 
             this.backgroundPannel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.backgroundPannel.Controls.Add(this.gameTabNoLoginCover);
+            this.backgroundPannel.Controls.Add(this.saveGameButton);
             this.backgroundPannel.Controls.Add(this.shopGB);
             this.backgroundPannel.Controls.Add(this.mineOreButton);
             this.backgroundPannel.Controls.Add(this.cashGB);
@@ -185,6 +277,26 @@
             this.backgroundPannel.Name = "backgroundPannel";
             this.backgroundPannel.Size = new System.Drawing.Size(815, 460);
             this.backgroundPannel.TabIndex = 1;
+            // 
+            // gameTabNoLoginCover
+            // 
+            this.gameTabNoLoginCover.Location = new System.Drawing.Point(21, 21);
+            this.gameTabNoLoginCover.Name = "gameTabNoLoginCover";
+            this.gameTabNoLoginCover.Size = new System.Drawing.Size(774, 393);
+            this.gameTabNoLoginCover.TabIndex = 12;
+            this.gameTabNoLoginCover.TabStop = false;
+            // 
+            // saveGameButton
+            // 
+            this.saveGameButton.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.saveGameButton.ForeColor = System.Drawing.Color.Black;
+            this.saveGameButton.Location = new System.Drawing.Point(390, 286);
+            this.saveGameButton.Name = "saveGameButton";
+            this.saveGameButton.Size = new System.Drawing.Size(177, 25);
+            this.saveGameButton.TabIndex = 12;
+            this.saveGameButton.Text = "Save Game";
+            this.saveGameButton.UseVisualStyleBackColor = true;
+            this.saveGameButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // shopGB
             // 
@@ -240,9 +352,9 @@
             // 
             this.mineOreButton.Font = new System.Drawing.Font("Arial Rounded MT Bold", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mineOreButton.ForeColor = System.Drawing.Color.Black;
-            this.mineOreButton.Location = new System.Drawing.Point(398, 322);
+            this.mineOreButton.Location = new System.Drawing.Point(390, 322);
             this.mineOreButton.Name = "mineOreButton";
-            this.mineOreButton.Size = new System.Drawing.Size(369, 75);
+            this.mineOreButton.Size = new System.Drawing.Size(377, 75);
             this.mineOreButton.TabIndex = 11;
             this.mineOreButton.Text = "Mine A Random Ore";
             this.mineOreButton.UseVisualStyleBackColor = true;
@@ -418,12 +530,15 @@
             this.ClientSize = new System.Drawing.Size(800, 434);
             this.Controls.Add(this.tabControl1);
             this.Name = "gameWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Game Window";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.loginGroupBox.ResumeLayout(false);
+            this.loginGroupBox.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.backgroundPannel.ResumeLayout(false);
             this.shopGB.ResumeLayout(false);
@@ -462,8 +577,17 @@
         private System.Windows.Forms.GroupBox shopGB;
         private System.Windows.Forms.Button increaseLuckButton;
         private System.Windows.Forms.Button mineMoreOresUpgradeButton;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button increaseSellMulti;
+        private System.Windows.Forms.GroupBox loginGroupBox;
+        private System.Windows.Forms.Label usernameLoginLabel;
+        private System.Windows.Forms.Label passwordLoginLabel;
+        private System.Windows.Forms.TextBox passwordLoginTextbox;
+        private System.Windows.Forms.TextBox usernameLoginTextbox;
+        private System.Windows.Forms.Button submitLoginButton;
+        private System.Windows.Forms.Button cancelLoginButton;
+        private System.Windows.Forms.Label badLoginDetailsLabel;
+        private System.Windows.Forms.GroupBox gameTabNoLoginCover;
+        private System.Windows.Forms.Button saveGameButton;
     }
 }
 

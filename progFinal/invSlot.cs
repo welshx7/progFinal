@@ -43,5 +43,15 @@ namespace progFinal
             invSlotObj.BackColor = Color.FromArgb(r, g, b);
         }
 
+        public string getSaveData() {
+            string dataString = null;
+
+
+            if (item != null) { 
+                dataString = "&item" + item.getQualityValue() + "-" + item.getOreType() + "-" + item.getItemValue() + "-" + slotNum;
+            }
+
+            return dataString;
+        }
     }
 }

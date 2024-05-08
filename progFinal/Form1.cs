@@ -1,12 +1,21 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace progFinal
 {
 
     public partial class gameWindow : Form
     {
+        bool isLoggingIn = false;
+        string validUsername = string.Empty;
+
+        DataRow saveDataRow;
+
         List<invSlot> invSlots = new List<invSlot>();
 
         invSlot selectedSlot = null;
@@ -67,6 +76,10 @@ namespace progFinal
             invSlots.Add(new invSlot(7, invSlot7));
             invSlots.Add(new invSlot(8, invSlot8));
 
+        }
+        
+        void initialSetup() {
+
             for (int i = 0; i < (luckAdder / luckScaling); i++) {
                 luckAdderCost *= costScaling;
             }
@@ -81,6 +94,28 @@ namespace progFinal
 
             updateShopLabels();
 
+        }
+
+        void saveGame() {
+
+            string invDataString = String.Empty;
+            for (int i = 0; i < invSlots.Count; i++) {
+
+                if (invSlots[i].getItem() != null) {
+                    invDataString += invSlots[i].getSaveData();
+                }
+
+            }
+            
+            SqlConnection database = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\saveData.mdf;Integrated Security=True");
+            database.Open();
+
+            //string queryString = "UPDATE accountSaveData SET cash = '" + cash + "' WHERE username = '" + validUsername + "'";
+            string queryString = "UPDATE accountSaveData SET cash = '" + cash + "', canSellAll = '" + canSellAll + "', oreMineAmount = '" + oreMineAmount + "', luckAdder = '" + luckAdder + "', extraSellMulti = '" + extraSellMulti + "', invData = '" + invDataString + "' WHERE username = '" + validUsername + "'";
+            SqlCommand cmd = new SqlCommand(queryString, database);
+            cmd.ExecuteNonQuery();
+
+            database.Close();
         }
 
         void editCash(double amount) {
@@ -249,11 +284,15 @@ namespace progFinal
         }
 
         private void loginButton_Click(object sender, EventArgs e) {
-            tabControl1.SelectedIndex = 1;
+            loginGroupBox.Text = "Login";
+            loginGroupBox.Visible = true;
+            isLoggingIn = true;
         }
 
         private void createAccountButton_Click(object sender, EventArgs e) {
-
+            loginGroupBox.Text = "Create Account";
+            loginGroupBox.Visible = true;
+            isLoggingIn = false;
         }
 
         private void increaseSellMulti_Click(object sender, EventArgs e) {
@@ -271,6 +310,139 @@ namespace progFinal
 
         private void Form1_Load(object sender, EventArgs e) {
 
+        }
+
+        private void label2_Click(object sender, EventArgs e) {
+
+        }
+
+        private void usernameLoginTextbox_TextChanged(object sender, EventArgs e) {
+
+        }
+
+        private void submitLoginButton_Click(object sender, EventArgs e) {
+            
+            SqlConnection database = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\saveData.mdf;Integrated Security=True");
+            database.Open();
+
+            string username = usernameLoginTextbox.Text;
+            string password = passwordLoginTextbox.Text;
+            
+            if (isLoggingIn) {
+                
+                try {
+                    string queryString = "SELECT * FROM accounts WHERE username = '" + username + "' AND password = '" + password + "'";
+
+                    SqlDataAdapter data = new SqlDataAdapter(queryString, database);
+                    DataTable dataTable = new DataTable();
+
+                    data.Fill(dataTable);
+
+                    if (dataTable.Rows.Count > 0) {
+
+                        validUsername = username;
+                        gameTabNoLoginCover.Visible = false;
+                        tabControl1.SelectedIndex = 1;
+                        tabControl1.TabPages.Remove(tabPage1);
+
+                        queryString = "SELECT * FROM accountSaveData WHERE username = '" + username + "'";
+                        data = new SqlDataAdapter(queryString, database);
+                        dataTable = new DataTable();
+
+                        data.Fill(dataTable);
+                        DataColumn[] keyColumns = new DataColumn[1];
+                        keyColumns[0] = dataTable.Columns["username"];
+                        dataTable.PrimaryKey = keyColumns;
+
+
+                        if (dataTable.Rows.Count > 0) {
+
+                            saveDataRow = dataTable.Rows.Find(validUsername);
+
+                            cash = (double)saveDataRow.ItemArray[1];
+                            canSellAll = (bool)saveDataRow.ItemArray[2];
+                            oreMineAmount = (int)saveDataRow.ItemArray[3];
+                            luckAdder = (int)saveDataRow.ItemArray[4];
+                            extraSellMulti = (int)saveDataRow.ItemArray[5];
+
+                            string rawInvData = (string)saveDataRow.ItemArray[6];
+
+                            if (rawInvData.Length > 0) {
+
+                                string[] items = rawInvData.Split(new string[] { "&item" }, StringSplitOptions.RemoveEmptyEntries);
+
+                                for (int i = 0; i < items.Length; i++) {
+                                    string thisItem = items[i];
+                                    item newItem = new item(thisItem);
+                                    invSlots[(thisItem[thisItem.Length - 1]) - '0'].setItem(newItem);
+                                }
+
+                            }
+
+                        }
+
+                        initialSetup();
+
+                    } else {
+
+                        badLoginDetailsLabel.Text = "* Username Or Password Incorrect";
+                        badLoginDetailsLabel.Visible = true;
+                        passwordLoginTextbox.Text = String.Empty;
+                        usernameLoginTextbox.Text = String.Empty;
+                    }
+
+                } catch(Exception error) {
+                    MessageBox.Show("Error:" + error.Message);
+                } finally {
+                    database.Close();
+                }
+
+            } else {
+                loginGroupBox.Text = "Signup";
+                try {
+                    string queryString = "INSERT INTO accounts (username, password) VALUES ('" + username + "','" + password + "')";
+
+                    SqlCommand cmd = new SqlCommand(queryString, database);
+                    cmd.ExecuteNonQuery();
+
+                    queryString = "INSERT INTO accountSaveData (username, cash, canSellAll, oreMineAmount, luckAdder, extraSellMulti, invData) VALUES ('" + username + "','" + cash + "','" + canSellAll + "','" + oreMineAmount + "','" + luckAdder + "','" + extraSellMulti + "','" + "" + "')";
+                    cmd = new SqlCommand(queryString, database);
+                    cmd.ExecuteNonQuery();
+
+                    validUsername = username;
+                    gameTabNoLoginCover.Visible = false;
+                    tabControl1.SelectedIndex = 1;
+                    tabControl1.TabPages.Remove(tabPage1);
+
+                } catch (Exception error) {
+
+                    if (error.Message.Contains("Violation of PRIMARY KEY")) {
+                        badLoginDetailsLabel.Text = "* Username Already Exists!";
+                        badLoginDetailsLabel.Visible = true;
+                    } else {
+                        MessageBox.Show("Error:" + error.GetType());
+                    }
+
+
+                } finally {
+                    database.Close();
+                    initialSetup();
+                }
+
+            }
+        }
+
+        private void cancelLoginButton_Click(object sender, EventArgs e) {
+            
+            badLoginDetailsLabel.Visible = false;
+            passwordLoginTextbox.Text = string.Empty;
+            usernameLoginTextbox.Text = string.Empty;
+            loginGroupBox.Visible = false;
+
+        }
+
+        private void button1_Click(object sender, EventArgs e) {
+            saveGame();
         }
     }
 }
