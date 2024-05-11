@@ -18,7 +18,7 @@ namespace progFinal
 
         private List<double> oreValues = new List<double>
         {
-            1, 3, 6, 10, 15, 21, 28, 36, 45, 55
+            1, 3, 6, 10, 15, 21, 28, 36, 45, 55 // base values for each ore
         };
 
         private string itemName;
@@ -30,7 +30,6 @@ namespace progFinal
 
             string[] itemDetails = itemData.Split('-');
             
-            itemName = qualityMods[0] + " " + oreNames[1];
             itemValue = Convert.ToDouble(itemDetails[2]);
             qualityValue = Int32.Parse(itemDetails[0]);
             oreType = Int32.Parse(itemDetails[1]);
@@ -39,8 +38,8 @@ namespace progFinal
         }
 
         public item(int luck, int sellMulti) {
-            int oreQualityNum = StaticRandom.Instance.Next(1, 300 - luck);
-            int oreTypeNum = StaticRandom.Instance.Next(1, 500 - luck);
+            int oreQualityNum = StaticRandom.Instance.Next(1, 300 - luck); // as the player gets more luck, the odds of getting a lower number increase yielding better ore
+            int oreTypeNum = StaticRandom.Instance.Next(1, 500 - luck); // ^^^
 
             string itemQuality;
             string itemType;
@@ -83,7 +82,7 @@ namespace progFinal
 
             // making the ore more valuble based on how good of quality it is
             for (int i = 0; i < (qualityValue + sellMulti); i++) {
-                itemValue = itemValue * 1.25;
+                itemValue *= 1.25;
             }
 
             // Finalizing the item name

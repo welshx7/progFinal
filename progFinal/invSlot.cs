@@ -16,14 +16,14 @@ namespace progFinal
 
         public invSlot(int slotNum, Button invSlotObj) {
             this.slotNum = slotNum;
-            this.invSlotObj = invSlotObj;
+            this.invSlotObj = invSlotObj; 
             this.item = null;
         }
 
         public void setItem(item item) {
             this.item = item;
 
-            if (item != null ) {
+            if (item != null ) { // sometimes we set the item to null to make the slot empty, we can't use getItemName on null.
                 invSlotObj.Text = item.getItemName();
             } else {
                 invSlotObj.Text = "";
@@ -48,7 +48,7 @@ namespace progFinal
 
 
             if (item != null) { 
-                dataString = "&item" + item.getQualityValue() + "-" + item.getOreType() + "-" + item.getItemValue() + "-" + slotNum;
+                dataString = "&item" + item.getQualityValue() + "-" + item.getOreType() + "-" + item.getItemValue() + "-" + slotNum; // first number is the first word of the item, next number is the type of ore, next is the value so we don't have to recalculate it, last is the slot it's stored in
             }
 
             return dataString;

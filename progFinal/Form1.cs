@@ -13,26 +13,32 @@ namespace progFinal
     {
         bool isLoggingIn = false;
         string validUsername = string.Empty;
-
+        // these are for saving purposes
         DataRow saveDataRow;
 
         List<invSlot> invSlots = new List<invSlot>();
+        // a list to store the inventory slot objects listed in order
 
         invSlot selectedSlot = null;
 
         double cash = 0;
+        
         bool canSellAll = false;
         int oreMineAmount = 0;
         int luckAdder = 0;
         int extraSellMulti = 0;
+        // stores what shop upgrades are purchased 
 
         int luckAdderCost = 250;
         int extraSellMultiCost = 500;
         int oreMineAmountCost = 1000;
-        //
+        //Base costs of shop upgrades 
+
         int costScaling = 2;
         int luckScaling = 50;
-        //
+        // controlls how much the shop upgrades increase by, and how much extra you get per upgrade
+
+        // used to visually update the shop label's prices and upgrade levels
         void updateShopLabels(int updateButtonCost = 0) {
 
             if (updateButtonCost == 1) {
@@ -75,9 +81,10 @@ namespace progFinal
             invSlots.Add(new invSlot(6, invSlot6));
             invSlots.Add(new invSlot(7, invSlot7));
             invSlots.Add(new invSlot(8, invSlot8));
-
+            // populating the inv slots list
         }
         
+        // used for setting up the shop prices
         void initialSetup() {
 
             for (int i = 0; i < (luckAdder / luckScaling); i++) {
@@ -96,21 +103,23 @@ namespace progFinal
 
         }
 
+
         void saveGame() {
 
+            // this sets up the string that'll be used to store the information about what items the user has for saving
             string invDataString = String.Empty;
             for (int i = 0; i < invSlots.Count; i++) {
 
-                if (invSlots[i].getItem() != null) {
+                if (invSlots[i].getItem() != null) { // if there is an item in the slot, get its data string
                     invDataString += invSlots[i].getSaveData();
                 }
 
             }
             
+            // database stuffs
             SqlConnection database = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\saveData.mdf;Integrated Security=True");
             database.Open();
 
-            //string queryString = "UPDATE accountSaveData SET cash = '" + cash + "' WHERE username = '" + validUsername + "'";
             string queryString = "UPDATE accountSaveData SET cash = '" + cash + "', canSellAll = '" + canSellAll + "', oreMineAmount = '" + oreMineAmount + "', luckAdder = '" + luckAdder + "', extraSellMulti = '" + extraSellMulti + "', invData = '" + invDataString + "' WHERE username = '" + validUsername + "'";
             SqlCommand cmd = new SqlCommand(queryString, database);
             cmd.ExecuteNonQuery();
@@ -118,14 +127,17 @@ namespace progFinal
             database.Close();
         }
 
+        // makes changing cash easier
         void editCash(double amount) {
             cash += amount;
-            cash = Math.Round(cash, 1);
+            cash = Math.Round(cash, 1); // to keep the decimal short since we're adding decimals together
             cashLabel.Text = "$" + cash.ToString();
         }
 
+        // this handles when a slot is clicked
         void switchItem(invSlot clickedSlot) {
 
+            // if we have an item selected, and we clicked a slot with an item
             if (selectedSlot != null && clickedSlot.getItem() != null) {
 
                 item temp = selectedSlot.getItem();
@@ -138,7 +150,8 @@ namespace progFinal
                 clickedSlot.setColor(225, 225, 225);
                 selectedSlot.setColor(225, 225, 225);
                 selectedSlot = null;
-
+            
+            // if we have an item selected, and the slot we clicked is empty
             } else if (selectedSlot != null && clickedSlot.getItem() == null) {
 
                 clickedSlot.setItem(selectedSlot.getItem());
@@ -148,6 +161,7 @@ namespace progFinal
 
                 selectedSlot = null;
 
+            // if we don't have an item selected, and click a slot with an item
             } else if (selectedSlot == null && clickedSlot.getItem() != null) {
 
                 selectedSlot = clickedSlot;
@@ -157,13 +171,15 @@ namespace progFinal
             }
         }
 
+        // for removing an item from a slot
         void removeItem(invSlot slot) {
-            if (slot.getItem() != null) {
+            if (slot.getItem() != null) { // making sure theres an item
                 slot.setItem(null);
                 slot.setColor(225, 225, 225);
             }
         }
 
+        // basically bundles the functions for removing and adding cash
         void sellItem() {
             if (selectedSlot != null) {
                 editCash(selectedSlot.getItem().getItemValue());
@@ -228,7 +244,7 @@ namespace progFinal
             if (canSellAll) {
                 for (int i = 0; i < invSlots.Count; i++) {
 
-                    if (invSlots[i].getItem() == null) {
+                    if (invSlots[i].getItem() == null) { // if there's no item, skip this slot
                         continue;
                     }
 
@@ -236,17 +252,17 @@ namespace progFinal
                     removeItem(invSlots[i]);
                 }
 
-                if (selectedSlot != null) {
+                if (selectedSlot != null) { // after removing all the items, then the selected item would be sold, so we set selected to null
                     selectedSlot = null;
                 }
             }
         }
 
         private void mineOreButton_Click(object sender, EventArgs e) {
-            for (int i = 0; i < oreMineAmount + 1; i++) {
+            for (int i = 0; i < oreMineAmount + 1; i++) { // mine x amount of ore based on how many extra ore upgrades purchased
                 
                 invSlot firstEmptySlot = null;
-                for (int j = 0; j < invSlots.Count; j++) {
+                for (int j = 0; j < invSlots.Count; j++) { // finding what the first empty slot is so we can add an ore to it
                     if (invSlots[j].getItem() == null) {
                         firstEmptySlot = invSlots[j];
                         break;
@@ -260,6 +276,7 @@ namespace progFinal
             }
         }
 
+        // this is the shop button for mining extra ore/unlocking selling all button
         private void button2_Click(object sender, EventArgs e) {
             if (cash >= oreMineAmountCost) {
 
@@ -274,6 +291,7 @@ namespace progFinal
             }
         }
 
+        // this is the shop button for increasing ore luck
         private void increaseLuckButton_Click(object sender, EventArgs e) {
             if (cash >= luckAdderCost) {
                 editCash(luckAdderCost * -1);
@@ -283,18 +301,20 @@ namespace progFinal
             }
         }
 
+
         private void loginButton_Click(object sender, EventArgs e) {
             loginGroupBox.Text = "Login";
             loginGroupBox.Visible = true;
-            isLoggingIn = true;
+            isLoggingIn = true; // I use the same menu for logging in/signing up so this keeps track of what was clicked
         }
 
         private void createAccountButton_Click(object sender, EventArgs e) {
             loginGroupBox.Text = "Create Account";
             loginGroupBox.Visible = true;
-            isLoggingIn = false;
+            isLoggingIn = false; 
         }
 
+        // this is the shop button for increasing the sell multiplier 
         private void increaseSellMulti_Click(object sender, EventArgs e) {
             if (cash >= extraSellMultiCost) {
                 editCash(extraSellMultiCost * -1);
@@ -328,7 +348,7 @@ namespace progFinal
             string username = usernameLoginTextbox.Text;
             string password = passwordLoginTextbox.Text;
             
-            if (isLoggingIn) {
+            if (isLoggingIn) { // if the login button was clicked
                 
                 try {
                     string queryString = "SELECT * FROM accounts WHERE username = '" + username + "' AND password = '" + password + "'";
@@ -338,10 +358,10 @@ namespace progFinal
 
                     data.Fill(dataTable);
 
-                    if (dataTable.Rows.Count > 0) {
+                    if (dataTable.Rows.Count > 0) { // if there's an accoutn with the coorisponding name and password
 
                         validUsername = username;
-                        gameTabNoLoginCover.Visible = false;
+                        gameTabNoLoginCover.Visible = false; // this hides the game tab when the user isn't logged in
                         tabControl1.SelectedIndex = 1;
                         tabControl1.TabPages.Remove(tabPage1);
 
@@ -355,7 +375,7 @@ namespace progFinal
                         dataTable.PrimaryKey = keyColumns;
 
 
-                        if (dataTable.Rows.Count > 0) {
+                        if (dataTable.Rows.Count > 0) { // if there's data saved to the account
 
                             saveDataRow = dataTable.Rows.Find(validUsername);
 
@@ -367,14 +387,14 @@ namespace progFinal
 
                             string rawInvData = (string)saveDataRow.ItemArray[6];
 
-                            if (rawInvData.Length > 0) {
+                            if (rawInvData.Length > 0) { // if there's inventory items saved
 
-                                string[] items = rawInvData.Split(new string[] { "&item" }, StringSplitOptions.RemoveEmptyEntries);
+                                string[] items = rawInvData.Split(new string[] { "&item" }, StringSplitOptions.RemoveEmptyEntries); // splitting each of the items into a list
 
                                 for (int i = 0; i < items.Length; i++) {
                                     string thisItem = items[i];
-                                    item newItem = new item(thisItem);
-                                    invSlots[(thisItem[thisItem.Length - 1]) - '0'].setItem(newItem);
+                                    item newItem = new item(thisItem); // we use the saved data string to create a new item object
+                                    invSlots[thisItem[thisItem.Length - 1] - '0'].setItem(newItem); // this is looking at the last character in the data string, which is a number coorisponding to the inventory slot the item was saved in
                                 }
 
                             }
@@ -383,10 +403,10 @@ namespace progFinal
 
                         initialSetup();
 
-                    } else {
+                    } else { // account doesn't exist
 
                         badLoginDetailsLabel.Text = "* Username Or Password Incorrect";
-                        badLoginDetailsLabel.Visible = true;
+                        badLoginDetailsLabel.Visible = true; 
                         passwordLoginTextbox.Text = String.Empty;
                         usernameLoginTextbox.Text = String.Empty;
                     }
@@ -397,8 +417,10 @@ namespace progFinal
                     database.Close();
                 }
 
-            } else {
+            } else { // if the signup button was clicked
+
                 loginGroupBox.Text = "Signup";
+
                 try {
                     string queryString = "INSERT INTO accounts (username, password) VALUES ('" + username + "','" + password + "')";
 
@@ -410,13 +432,13 @@ namespace progFinal
                     cmd.ExecuteNonQuery();
 
                     validUsername = username;
-                    gameTabNoLoginCover.Visible = false;
+                    gameTabNoLoginCover.Visible = false; // this hides the game tab when the user isn't logged in
                     tabControl1.SelectedIndex = 1;
                     tabControl1.TabPages.Remove(tabPage1);
 
                 } catch (Exception error) {
 
-                    if (error.Message.Contains("Violation of PRIMARY KEY")) {
+                    if (error.Message.Contains("Violation of PRIMARY KEY")) { // how I check if the account with that username already exists instead of searching the database
                         badLoginDetailsLabel.Text = "* Username Already Exists!";
                         badLoginDetailsLabel.Visible = true;
                     } else {
@@ -432,6 +454,7 @@ namespace progFinal
             }
         }
 
+        // for clearing out the login textboxes and hiding the login menu
         private void cancelLoginButton_Click(object sender, EventArgs e) {
             
             badLoginDetailsLabel.Visible = false;
